@@ -54,8 +54,8 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1>タイトル</h1>
-            <span class="meta">Posted on May 30, 2019</span>
+            <h1>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</h1>
+            <span class="meta">Posted on May 31, 2019</span>
           </div>
         </div>
       </div>
@@ -67,42 +67,180 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          <p>Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</p>
+<h2>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</h2>
+<h2>書誌事項</h2>
+<p>Jacob Devlin et al. BERT: Pre-training of Deep Bidirectional Transformers for
+Language Understanding. Cornel University Library. <a href="https://arxiv.org/pdf/1810.04805.pdf">https://arxiv.org/pdf/1810.04805.pdf</a>, 2018.</p>
+<h2>PDFのURL</h2>
+<p><a href="https://arxiv.org/pdf/1810.04805.pdf">https://arxiv.org/pdf/1810.04805.pdf</a></p>
+<hr>
+<h2>序論の3戦略</h2>
+<h3>戦略1：研究領域の確立</h3>
+<p>事前学習を行った言語モデルを用いることで, 自然言語処理の様々なタスクで精度の改善に効果があることが示されている.<br>
+そのような研究には feature-basedなものとfine-tuningなものがある</p>
+<h3>戦略2：先行研究の隙間</h3>
+<p>次の単語を予測するような言語モデルで事前学習を行う際, 現在の予測のプロセスにおいて予測するべき未来の単語情報を用いてはいけない.<br>
+このような問題に対して強力な双方向の言語モデルが必要であるが, fine-tuningのモデルとして2018年に提案されたOpenAI GPTでは, 未来の単語位置のネットワークにマスクをかけねばならず、単方向になってしまう. また, feature-basedなモデルとして2018年に提案されたELMoは双方向なモデルであるが, 順方向LSTMと逆方向LSTMを同時に学習することができない.<br>
+そこで, 事前学習の方法を工夫することで強力な双方向モデルであるBERTが提案された.</p>
+<h3>戦略3：研究の目的</h3>
+<ul>
+<li>強力な双方向言語モデルであるBERTの提案</li>
+<li>11の自然言語処理のタスクに対してBERTを転移学習させることの有用性の検証</li>
+</ul>
+<h2>主な結果と考察</h2>
+<h3>データセット</h3>
+<p>GLUE：自然言語処理のためのデータセットの集合(8つのタスク)</p>
+<ul>
+<li>MNLI : 含意関係に関するデータセット</li>
+<li>QQP : 二つの質問が同じ意味かのデータセット</li>
+<li>QNLI : 質問応答データセット</li>
+<li>SST-2 : 映画の感想の感情分析のデータセット</li>
+<li>CoLA : 使われている英語が言語的に正しいかのデータセット</li>
+<li>STS-B : ニュースの見出しと感想のペアが意味的に正しいかのデータセット</li>
+<li>MRPC : オンラインニュースから抽出された分のペアが意味的に同じかのデータセット</li>
+<li>RTE : 文のペアに含意関係があるかのデータセット(MNLIより小規模)</li>
+</ul>
+<p>SQuAD : スタンフォード大学が提供している約10万ペアのクラウドソーシングの質疑応答ペアデータセット</p>
+<p>NER : 20万のアノテーションされた固有表現のデータセット</p>
+<p>SWAG : 約11万の完結したペアの文例集. 文の続きを推論するためのデータセット</p>
+<h3>BERT</h3>
+<p><strong>BERT</strong> は様々な自然言語処理に対して汎用的に使える分散表現を計算する機構<br>
+BERTでは, ラベルなどが付与されていないテキストデータから言語知識を獲得し, これを埋め込んだ単語分散表現(単語のベクトル)を計算する.<br>
+この分散表現には事前に学習した知識が詰め込まれているため、タスクを解く際の手がかりが豊富となりタスクの精度向上に繋がる<br>
+BERTの特にすごいところは以下の2点</p>
+<ul>
+<li>BERTは既存のモデルそのものを改良しなくとも、ただ前に接続するだけで精度が向上する</li>
+<li>Googleの持つ大規模な計算機により獲得された分散表現なので, 入力をより優れた情報を持つ分散表現に変換できる</li>
+</ul>
+<p>BERTの概要は以下の図のようになる</p>
+<p><img src="images/bert.png" alt=""></p>
+<p>BERTの入力は単語分散表現の列で, 出力も単語分散表現の列となる<br>
+<strong>Token Embeddings</strong> : 「my」や「dog」という各単語に対応したベクトル（分散表現）<br>
+<strong>Segment Embeddings</strong> : 二つの文を入力するときに、その単語がどちらの文に含まれているかを判別するための分散表現<br>
+<strong>Position Embeddings</strong> : 単語が入力の中で何番目に現れているかを示す分散表現</p>
+<p>また, <strong>[CLS]</strong> は文の分類問題に用いるための特殊なトークンで, <strong>[SEP]</strong> は文末を示す特殊なトークン<br>
+例えば「my」という単語であれば、その単語が文の中でどのような働きをしているか、といった情報が付与された分散表現が出力される</p>
+<p><strong>片方向しか情報が伝播しないネットワークよりも、両方向に情報が伝播したほうが強力に学習できそうだが, なぜ今までこのような双方向のfine-tuningモデルが提案されてこなかったのか</strong><br>
+-&gt; n-1番目までの情報からn番目の単語を予測するタスクにおいて, 現在の予測プロセスの際に、予測するべき未来の単語情報を用いないようにする制約が必要<br>
+しかし, BERTでは事前学習の際に2つの工夫を行うことでこの問題を解決</p>
+<h4>1. マスク単語の予測</h4>
+<p>入力文のうちいくつかの単語を隠し、文脈からその単語を当てるタスクを学習させる<br>
+具体的には, 全体の15%を[MASK]トークンに置き換えて予測<br>
+そのうち、80%がマスク、10%がランダムな単語、10%を置き換えない方針で変換する</p>
+<pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・my dog is hairy -&gt; my dog is [MASK]</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・my dog is hairy -&gt; my dog is apple</span></span></span>
+</pre>
+<h4>2. 隣接文の予測</h4>
+<p>二つの文章を与え、隣り合っているかをYes/Noで判定する<br>
+文章AとBが与えられた時に、50%の確率で別の関係ない文章Bに置き換える<br>
+このタスクを解くことで、BERTは単語だけでなく文全体の表現についても学習することができる</p>
+<pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・[CLS] the man went to [MASK] store [SEP]</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・he bought a gallon [MASK] milk [SEP]</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>→ isNext</span></span></span>
+<span class="syntax--text syntax--plain"><span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・[CLS] the man [MASK] to the store [SEP]</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・penguin [MASK] are flight ##less birds [SEP]</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>→ notNext</span></span></span>
+</pre>
+<h3>結果</h3>
+<h4>GLUE</h4>
+<p>GLUEの計8タスクに対してBERTと既存の手法を比較したところ以下の図のようになった<br>
+<img src="images/glue.png" alt=""><br>
+どのタスクにおいてもBERTのスコアが一番高くなっている<br>
+BERTには, BASEとLARGEがあり, LARGEはBASEよりもパラメータ数が多いモデル</p>
+<h4>SQuAD</h4>
+<p>質問と答えの存在する文章をインプットとして与え, その質問の答えを正しく出力できるかというタスク</p>
+<pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Input Question</span></span></span>
+<span class="syntax--text syntax--plain"><span>  </span><span class="syntax--meta syntax--paragraph syntax--text"><span>Where do water droplets collide with ice crystals to form precipitation?</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Input Paragraph</span></span></span>
+<span class="syntax--text syntax--plain"><span>  </span><span class="syntax--meta syntax--paragraph syntax--text"><span>... Precipitation forms as smaller droplets</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>  coalesce via collision with other rain drops</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>  or ice crystals within a cloud. ...</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Output Answer</span></span></span>
+<span class="syntax--text syntax--plain"><span>  </span><span class="syntax--meta syntax--paragraph syntax--text"><span>within a cloud</span></span></span>
+</pre>
+<p>SQuADのみを用いて学習した場合, SQuADに加えTriviaQAというデータセットを用いてデータ拡張した場合もいずれにおいても, 既存の他のモデルより, スコアが高かった
+<img src="images/squad.png" alt=""></p>
+<h4>Named Entity Recognition</h4>
+<p>入力された単語を以下の5つのラベルに分類するタスク</p>
+<pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Person</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Organization</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Location</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Miscellaneous</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>・Other(non-named entity)</span></span></span>
+</pre>
+<p>BERT_LARGEは既存のどの手法よりもスコアが高くなった
+<img src="images/rte.png" alt=""></p>
+<h4>SWAG</h4>
+<p>以下のように与えられた文章の後に続く文を推測するタスク</p>
+<pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>A girl is going across a set of monkey bars. She</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>(i) jumps up across the monkey bars.</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>(ii) struggles onto the bars to grab her head.</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>(iii) gets to the end and stands on a wooden plank.</span></span></span>
+<span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>(iv) jumps up and does a back flip.</span></span></span>
+</pre>
+<p>BERT_LARGEは既存のどの手法よりも大幅にスコアが高くなり, 人間のスコアに近い値を出すことができた
+<img src="images/swag.png" alt=""></p>
+<h4>Ablation Studies</h4>
+<h5>事前学習タスクの影響</h5>
+<ol>
+<li>事前学習の隣接文の予測を行わず, マスク単語の予測だけを行った場合</li>
+<li>事前学習を行わず, 双方向ではなくLTR(Left To Right)で学習させた場合</li>
+<li>2に対してBiLSTMを転移学習させた場合</li>
+</ol>
+<p>この3種類を, MNLI-m, QNLI, MRPC, SST-2, SQuADで試したところ以下の結果が得られた<br>
+<img src="images/ablation1.png" alt=""><br>
+事前学習を行わないとスコアが下がることが示され, 特にLTRの場合大幅にスコアが下がり, 双方向モデルの有用性が示された</p>
+<h5>モデルのサイズの影響</h5>
+<p>レイヤーの数や隠れ層のサイズ, Attention headの数, マスク単語予測の精度?を変化させたときにスコアはどう変化するのかを試したところ以下のようになった<br>
+<img src="images/ablation2.png" alt=""><br>
+データセットの数が小さくてもモデルのサイズが大きい方が精度が高くなる</p>
+<h5>学習回数の影響</h5>
+<p>本論文では学習を1Mステップ行っているが, 500kの時よりも精度が1%上がっているので, 学習回数を大きくすることは重要<br>
+また, BERTは片方向だけであるLTRよりも学習させるのに時間がかかるがそれ以上に精度が改善される<br>
+<img src="images/ablation3.png" alt=""></p>
+<h4>Feature-basedアプローチによるBERT</h4>
+<p>BERTはFine-tuningのアプローチを取っているが, NLPのタスクの中にはそのアプローチでは解けない問題がある<br>
+また, Feature-basedアプローチは計算のコストがかからないということから, BERTでFeature-basedアプローチを取った場合をNERのタスクで試してみたところ以下の結果が得られた<br>
+<img src="images/featurebase.png" alt=""><br>
+Feature-basedのアプローチを取ったモデルでもFine-tuningのアプローチを取ったものとあまり変わらない結果を得ることができたので, BERTはどっちのアプローチでもいい結果を出すことが示された</p>
+<h3>結論</h3>
+<p>BERTを用いることで様々なNLPのタスクでいい結果が得られ, タスクによっては人間のスコアを超えているものもあった<br>
+言語的な問題をBERTでどう扱っていくかが今後の課題</p>
+<h2>キーワードと定義</h2>
+<p>Ablation Studies : 下記のように各構成要素を1つだけ抜いて手法を比較することで、提案手法からどの構成要素を抜いたとしても大きく精度が低下することを示し、結果的にどの構成要素も重要であると主張する比較手法(<a href="https://qiita.com/yu4u/items/606e6e5225ad9b603269">https://qiita.com/yu4u/items/606e6e5225ad9b603269</a>)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left">精度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">既存手法</td>
+<td style="text-align:left">80%</td>
+</tr>
+<tr>
+<td style="text-align:left">提案手法（Aなし）</td>
+<td style="text-align:left">86%</td>
+</tr>
+<tr>
+<td style="text-align:left">提案手法（Bなし）</td>
+<td style="text-align:left">87%</td>
+</tr>
+<tr>
+<td style="text-align:left">提案手法（Cなし）</td>
+<td style="text-align:left">87%</td>
+</tr>
+<tr>
+<td style="text-align:left">提案手法</td>
+<td style="text-align:left">90%</td>
+</tr>
+</tbody>
+</table>
+<p>perplexity : 最もよく使われる言語モデルの評価尺度で, 実際のデータに対してどれだけモデルが流暢であるというかによって評価する(<a href="https://qiita.com/jyori112/items/296d816dfaf77c0d422c">https://qiita.com/jyori112/items/296d816dfaf77c0d422c</a>)</p>
 
-          <p>Science cuts two ways, of course; its products can be used for both good and evil. But there's no turning back from science. The early warnings about technological dangers also come from science.</p>
-
-          <p>What was most significant about the lunar voyage was not that man set foot on the Moon but that they set eye on the earth.</p>
-
-          <p>A Chinese tale tells of some men sent to harm a young girl who, upon seeing her beauty, become her protectors rather than her violators. That's how I felt seeing the Earth for the first time. I could not help but love and cherish her.</p>
-
-          <p>For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will, the experience most certainly changes your perspective. The things that we share in our world are far more valuable than those which divide us.</p>
-
-          <h2 class="section-heading">The Final Frontier</h2>
-
-          <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-          <p>There can be no thought of finishing for ‘aiming for the stars.’ Both figuratively and literally, it is a task to occupy the generations. And no matter how much progress one makes, there is always the thrill of just beginning.</p>
-
-          <blockquote class="blockquote">The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.</blockquote>
-
-          <p>Spaceflights cannot be stopped. This is not the work of any one man or even a group of men. It is a historical process which mankind is carrying out in accordance with the natural laws of human development.</p>
-
-          <h2 class="section-heading">Reaching for the Stars</h2>
-
-          <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
-
-          <a href="#">
-            <img class="img-fluid" src="img/post-sample-image.jpg" alt="">
-          </a>
-          <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
-
-          <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
-
-          <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-          <p>Placeholder text by
-            <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
-            <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
         </div>
       </div>
     </div>
