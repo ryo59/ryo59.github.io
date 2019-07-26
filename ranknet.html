@@ -909,7 +909,7 @@ pre.editor-colors .bracket-matcher .region {
 そこで, 機械学習を用いてランキングの最適化を行なったのがランク学習です.</p>
 <p>みなさんがよく使う検索エンジンではランク学習を用いて検索結果を最適化していると言われていて, 以下の図がランク学習の様子を表した図です.</p>
 <div align="center">
-<img src="../../zemi/github/ylabo/other/images_l2r/ranknet.png" width="70%" align="center">
+<img src="images/ranknet.png" width="70%" align="center">
 </div>
 <p>このランク学習には, 学習の方法によって, <strong>Pointwise</strong>手法, <strong>Pairwise</strong>手法, <strong>Listwise</strong>手法があります.</p>
 <ul>
@@ -918,7 +918,7 @@ pre.editor-colors .bracket-matcher .region {
 <li><strong>Listwise</strong> : クエリに対する全ての文書のリストに対して損失関数を設定し学習を行う</li>
 </ul>
 <div align="center">
-<img src="../../zemi/github/ylabo/other/images_l2r/ranknet2.png" width="70%" align="center">
+<img src="images/ranknet2.png" width="70%" align="center">
 </div>
 <p>今回紹介するRankNetはPairwise手法のランキングモデルです.</p>
 <h2>RankNetの概要</h2>
@@ -941,7 +941,7 @@ RankNetでは学習において損失関数として交差エントロピー誤�
 <p>MQ2007では一つのクエリに対して平均で約40個の文書がペアとなっています.(クエリの数は約1020個くらい)40個の文書を重複無しでペアにする組み合わせの数は780通りあり, 一つずつ計算してくと時間がかかるので, バッチ処理を行いました.<br>
 具体的には, 40個の文書をそれぞれモデルに入力し得られた予測値$s_i$, $s_j$から$s_i - s_j$のペアを作成し, 以下のように重複を取り除きました.</p>
 <div align="center">
-<img src="../../zemi/github/ylabo/other/images_l2r/ranknet3.png" width="70%" align="center">
+<img src="images/ranknet3.png" width="70%" align="center">
 </div>
 <p>モデルは以下のような構造に設定しました.</p>
 <pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>RankNet(</span></span></span>
@@ -969,13 +969,13 @@ RankNetでは学習において損失関数として交差エントロピー誤�
 <li>TrainのNDCG@10(Fold1)</li>
 </ul>
 <div align="center">
-<img src="../../zemi/github/ylabo/other/images_l2r/ranknet4.png" width="70%" align="center">
+<img src="images/ranknet4.png" width="70%" align="center">
 </div>
 <ul>
 <li>ValidationのNDCG@10(Fold1)</li>
 </ul>
 <div align="center">
-<img src="../../zemi/github/ylabo/other/images_l2r/ranknet5.png" width="70%" align="center">
+<img src="images/ranknet5.png" width="70%" align="center">
 </div>
 <p>そして, テストデータにおけるNDCGは以下のようになっています.</p>
 <pre class="editor-colors lang-text"><span class="syntax--text syntax--plain"><span class="syntax--meta syntax--paragraph syntax--text"><span>Fold1 Test NDCG@1：0.4454365087052186</span></span></span>
