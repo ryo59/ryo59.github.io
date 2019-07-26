@@ -1,903 +1,84 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script type="text/javascript"
+<html lang="en">
+
+<head>
+  <script type="text/javascript"
   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: { equationNumbers: { autoNumber: "AMS" }},
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      processEscapes: true
-    },
-    "HTML-CSS": { matchFontHeight: false },
-    displayAlign: "left",
-    displayIndent: "2em"
-  });
-</script>
-    <meta charset="utf-8" />
-    <title>ranknet</title>
-    <style>body { padding: 0; margin: 0; }
-.markdown-preview-plus-view:not([data-use-github-style]) {
-  padding: 2em;
-  font-size: 1.2em;
-  color: #1d1f21;
-  background-color: #ffffff;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) span.critic.comment > span {
-  background-color: #ffffff;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) > :first-child {
-  margin-top: 0;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h1,
-.markdown-preview-plus-view:not([data-use-github-style]) h2,
-.markdown-preview-plus-view:not([data-use-github-style]) h3,
-.markdown-preview-plus-view:not([data-use-github-style]) h4,
-.markdown-preview-plus-view:not([data-use-github-style]) h5,
-.markdown-preview-plus-view:not([data-use-github-style]) h6 {
-  line-height: 1.2;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  color: #000000;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h1 {
-  font-size: 2.4em;
-  font-weight: 300;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h2 {
-  font-size: 1.8em;
-  font-weight: 400;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h3 {
-  font-size: 1.5em;
-  font-weight: 500;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h4 {
-  font-size: 1.2em;
-  font-weight: 600;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h5 {
-  font-size: 1.1em;
-  font-weight: 600;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) h6 {
-  font-size: 1em;
-  font-weight: 600;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) strong {
-  color: #000000;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) del {
-  color: #43484c;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) a,
-.markdown-preview-plus-view:not([data-use-github-style]) a code {
-  color: #1d1f21;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) img {
-  max-width: 100%;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) > p {
-  margin-top: 0;
-  margin-bottom: 1.5em;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) > ul,
-.markdown-preview-plus-view:not([data-use-github-style]) > ol {
-  margin-bottom: 1.5em;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) blockquote {
-  margin: 1.5em 0;
-  font-size: inherit;
-  color: #43484c;
-  border-color: #d6d6d6;
-  border-width: 4px;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) hr {
-  margin: 3em 0;
-  border-top: 2px dashed #d6d6d6;
-  background: none;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) table {
-  margin: 1.5em 0;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) th {
-  color: #000000;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) th,
-.markdown-preview-plus-view:not([data-use-github-style]) td {
-  padding: 0.66em 1em;
-  border: 1px solid #d6d6d6;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) pre,
-.markdown-preview-plus-view:not([data-use-github-style]) code {
-  color: #000000;
-  background-color: #f0f0f0;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) pre,
-.markdown-preview-plus-view:not([data-use-github-style]) pre.editor-colors {
-  margin: 1.5em 0;
-  padding: 1em;
-  font-size: 0.92em;
-  border-radius: 3px;
-  background-color: #f5f5f5;
-}
-.markdown-preview-plus-view:not([data-use-github-style]) kbd {
-  color: #000000;
-  border: 1px solid #d6d6d6;
-  border-bottom: 2px solid #c7c7c7;
-  background-color: #f0f0f0;
-}
+  </script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" }},
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { matchFontHeight: false },
+      displayAlign: "left",
+      displayIndent: "2em"
+    });
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-@include 'style-variables';
-.markdown-preview-plus-view {
-  display: block;
-  overflow-x: hidden;
-}
-.markdown-preview-plus-view .emoji {
-  max-width: 1em !important;
-}
-.markdown-preview-plus-view del {
-  text-decoration: none;
-  position: relative;
-}
-.markdown-preview-plus-view del::after {
-  border-bottom: 1px solid black;
-  content: '';
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 50%;
-}
-.markdown-preview-plus-view .flash {
-  -webkit-animation: flash 1s ease-out;
-  -webkit-animation-iteration-count: 1;
-  outline: 1px solid rgba(255, 0, 0, 0);
-}
-@-webkit-keyframes flash {
-  0% {
-    outline-color: rgba(255, 0, 0, 0);
-  }
-  50% {
-    outline-color: #ff0000;
-  }
-  100% {
-    outline-color: rgba(255, 0, 0, 0);
-  }
-}
-.markdown-preview-plus-view pre.editor-colors {
-  display: block;
-  overflow: auto;
-  white-space: pre-line;
-}
-.markdown-preview-plus-view pre.editor-colors .line {
-  display: inline;
-}
-@media print {
-  .markdown-preview-plus-view pre.editor-colors {
-    overflow: visible !important;
-  }
-  .markdown-preview-plus-view pre.editor-colors .line {
-    white-space: pre-wrap !important;
-  }
-}
-.markdown-preview-plus-view ul.contains-task-list li.task-list-item {
-  position: relative;
-  list-style-type: none;
-}
-.markdown-preview-plus-view ul.contains-task-list li.task-list-item input.task-list-item-checkbox {
-  position: absolute;
-  transform: translateX(-100%);
-  width: 30px;
-}
-.markdown-preview-plus-view span.critic.comment {
-  position: relative;
-}
-.markdown-preview-plus-view span.critic.comment::before {
-  content: '\1f4ac';
-  position: initial;
-}
-.markdown-preview-plus-view span.critic.comment > span {
-  display: none;
-}
-.markdown-preview-plus-view span.critic.comment:hover > span {
-  display: initial;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  border: 1px solid;
-  border-radius: 5px;
-  max-height: 4em;
-  overflow: auto;
-}
-.markdown-preview-plus-view span.critic.comment:focus > span {
-  display: initial;
-  text-decoration: underline;
-  position: initial;
-  top: auto;
-  left: auto;
-  border: initial;
-  border-radius: initial;
-}
+  <title>研究ブログ</title>
 
-body.markdown-preview-plus-view[data-use-github-style] {
-  overflow: initial !important;
-}
-.markdown-preview-plus-view[data-use-github-style] {
-  overflow: hidden;
-  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
-  line-height: 1.6;
-  word-wrap: break-word;
-  padding: 30px;
-  font-size: 16px;
-  color: #333;
-  background-color: #fff;
-}
-.markdown-preview-plus-view[data-use-github-style] > *:first-child {
-  margin-top: 0 !important;
-}
-.markdown-preview-plus-view[data-use-github-style] > *:last-child {
-  margin-bottom: 0 !important;
-}
-.markdown-preview-plus-view[data-use-github-style] a:not([href]) {
-  color: inherit;
-  text-decoration: none;
-}
-.markdown-preview-plus-view[data-use-github-style] .absent {
-  color: #c00;
-}
-.markdown-preview-plus-view[data-use-github-style] .anchor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  padding-right: 6px;
-  padding-left: 30px;
-  margin-left: -30px;
-}
-.markdown-preview-plus-view[data-use-github-style] .anchor:focus {
-  outline: none;
-}
-.markdown-preview-plus-view[data-use-github-style] h1,
-.markdown-preview-plus-view[data-use-github-style] h2,
-.markdown-preview-plus-view[data-use-github-style] h3,
-.markdown-preview-plus-view[data-use-github-style] h4,
-.markdown-preview-plus-view[data-use-github-style] h5,
-.markdown-preview-plus-view[data-use-github-style] h6 {
-  position: relative;
-  margin-top: 1em;
-  margin-bottom: 16px;
-  font-weight: bold;
-  line-height: 1.4;
-}
-.markdown-preview-plus-view[data-use-github-style] h1 .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h2 .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h3 .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h4 .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h5 .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h6 .octicon-link {
-  display: none;
-  color: #000;
-  vertical-align: middle;
-}
-.markdown-preview-plus-view[data-use-github-style] h1:hover .anchor,
-.markdown-preview-plus-view[data-use-github-style] h2:hover .anchor,
-.markdown-preview-plus-view[data-use-github-style] h3:hover .anchor,
-.markdown-preview-plus-view[data-use-github-style] h4:hover .anchor,
-.markdown-preview-plus-view[data-use-github-style] h5:hover .anchor,
-.markdown-preview-plus-view[data-use-github-style] h6:hover .anchor {
-  padding-left: 8px;
-  margin-left: -30px;
-  text-decoration: none;
-}
-.markdown-preview-plus-view[data-use-github-style] h1:hover .anchor .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h2:hover .anchor .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h3:hover .anchor .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h4:hover .anchor .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h5:hover .anchor .octicon-link,
-.markdown-preview-plus-view[data-use-github-style] h6:hover .anchor .octicon-link {
-  display: inline-block;
-}
-.markdown-preview-plus-view[data-use-github-style] h1 tt,
-.markdown-preview-plus-view[data-use-github-style] h2 tt,
-.markdown-preview-plus-view[data-use-github-style] h3 tt,
-.markdown-preview-plus-view[data-use-github-style] h4 tt,
-.markdown-preview-plus-view[data-use-github-style] h5 tt,
-.markdown-preview-plus-view[data-use-github-style] h6 tt,
-.markdown-preview-plus-view[data-use-github-style] h1 code,
-.markdown-preview-plus-view[data-use-github-style] h2 code,
-.markdown-preview-plus-view[data-use-github-style] h3 code,
-.markdown-preview-plus-view[data-use-github-style] h4 code,
-.markdown-preview-plus-view[data-use-github-style] h5 code,
-.markdown-preview-plus-view[data-use-github-style] h6 code {
-  font-size: inherit;
-}
-.markdown-preview-plus-view[data-use-github-style] h1 {
-  padding-bottom: 0.3em;
-  font-size: 2.25em;
-  line-height: 1.2;
-  border-bottom: 1px solid #eee;
-}
-.markdown-preview-plus-view[data-use-github-style] h1 .anchor {
-  line-height: 1;
-}
-.markdown-preview-plus-view[data-use-github-style] h2 {
-  padding-bottom: 0.3em;
-  font-size: 1.75em;
-  line-height: 1.225;
-  border-bottom: 1px solid #eee;
-}
-.markdown-preview-plus-view[data-use-github-style] h2 .anchor {
-  line-height: 1;
-}
-.markdown-preview-plus-view[data-use-github-style] h3 {
-  font-size: 1.5em;
-  line-height: 1.43;
-}
-.markdown-preview-plus-view[data-use-github-style] h3 .anchor {
-  line-height: 1.2;
-}
-.markdown-preview-plus-view[data-use-github-style] h4 {
-  font-size: 1.25em;
-}
-.markdown-preview-plus-view[data-use-github-style] h4 .anchor {
-  line-height: 1.2;
-}
-.markdown-preview-plus-view[data-use-github-style] h5 {
-  font-size: 1em;
-}
-.markdown-preview-plus-view[data-use-github-style] h5 .anchor {
-  line-height: 1.1;
-}
-.markdown-preview-plus-view[data-use-github-style] h6 {
-  font-size: 1em;
-  color: #777;
-}
-.markdown-preview-plus-view[data-use-github-style] h6 .anchor {
-  line-height: 1.1;
-}
-.markdown-preview-plus-view[data-use-github-style] p,
-.markdown-preview-plus-view[data-use-github-style] blockquote,
-.markdown-preview-plus-view[data-use-github-style] ul,
-.markdown-preview-plus-view[data-use-github-style] ol,
-.markdown-preview-plus-view[data-use-github-style] dl,
-.markdown-preview-plus-view[data-use-github-style] table,
-.markdown-preview-plus-view[data-use-github-style] pre {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-.markdown-preview-plus-view[data-use-github-style] hr {
-  height: 4px;
-  padding: 0;
-  margin: 16px 0;
-  background-color: #e7e7e7;
-  border: 0 none;
-}
-.markdown-preview-plus-view[data-use-github-style] ul,
-.markdown-preview-plus-view[data-use-github-style] ol {
-  padding-left: 2em;
-}
-.markdown-preview-plus-view[data-use-github-style] ul.no-list,
-.markdown-preview-plus-view[data-use-github-style] ol.no-list {
-  padding: 0;
-  list-style-type: none;
-}
-.markdown-preview-plus-view[data-use-github-style] ul ul,
-.markdown-preview-plus-view[data-use-github-style] ul ol,
-.markdown-preview-plus-view[data-use-github-style] ol ol,
-.markdown-preview-plus-view[data-use-github-style] ol ul {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.markdown-preview-plus-view[data-use-github-style] li > p {
-  margin-top: 16px;
-}
-.markdown-preview-plus-view[data-use-github-style] dl {
-  padding: 0;
-}
-.markdown-preview-plus-view[data-use-github-style] dl dt {
-  padding: 0;
-  margin-top: 16px;
-  font-size: 1em;
-  font-style: italic;
-  font-weight: bold;
-}
-.markdown-preview-plus-view[data-use-github-style] dl dd {
-  padding: 0 16px;
-  margin-bottom: 16px;
-}
-.markdown-preview-plus-view[data-use-github-style] blockquote {
-  padding: 0 15px;
-  color: #777;
-  border-left: 4px solid #ddd;
-}
-.markdown-preview-plus-view[data-use-github-style] blockquote > :first-child {
-  margin-top: 0;
-}
-.markdown-preview-plus-view[data-use-github-style] blockquote > :last-child {
-  margin-bottom: 0;
-}
-.markdown-preview-plus-view[data-use-github-style] table {
-  display: block;
-  width: 100%;
-  overflow: auto;
-  word-break: normal;
-  word-break: keep-all;
-}
-.markdown-preview-plus-view[data-use-github-style] table th {
-  font-weight: bold;
-}
-.markdown-preview-plus-view[data-use-github-style] table th,
-.markdown-preview-plus-view[data-use-github-style] table td {
-  padding: 6px 13px;
-  border: 1px solid #ddd;
-}
-.markdown-preview-plus-view[data-use-github-style] table tr {
-  background-color: #fff;
-  border-top: 1px solid #ccc;
-}
-.markdown-preview-plus-view[data-use-github-style] table tr:nth-child(2n) {
-  background-color: #f8f8f8;
-}
-.markdown-preview-plus-view[data-use-github-style] img {
-  max-width: 100%;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.markdown-preview-plus-view[data-use-github-style] .emoji {
-  max-width: none;
-}
-.markdown-preview-plus-view[data-use-github-style] span.frame {
-  display: block;
-  overflow: hidden;
-}
-.markdown-preview-plus-view[data-use-github-style] span.frame > span {
-  display: block;
-  float: left;
-  width: auto;
-  padding: 7px;
-  margin: 13px 0 0;
-  overflow: hidden;
-  border: 1px solid #ddd;
-}
-.markdown-preview-plus-view[data-use-github-style] span.frame span img {
-  display: block;
-  float: left;
-}
-.markdown-preview-plus-view[data-use-github-style] span.frame span span {
-  display: block;
-  padding: 5px 0 0;
-  clear: both;
-  color: #333;
-}
-.markdown-preview-plus-view[data-use-github-style] span.align-center {
-  display: block;
-  overflow: hidden;
-  clear: both;
-}
-.markdown-preview-plus-view[data-use-github-style] span.align-center > span {
-  display: block;
-  margin: 13px auto 0;
-  overflow: hidden;
-  text-align: center;
-}
-.markdown-preview-plus-view[data-use-github-style] span.align-center span img {
-  margin: 0 auto;
-  text-align: center;
-}
-.markdown-preview-plus-view[data-use-github-style] span.align-right {
-  display: block;
-  overflow: hidden;
-  clear: both;
-}
-.markdown-preview-plus-view[data-use-github-style] span.align-right > span {
-  display: block;
-  margin: 13px 0 0;
-  overflow: hidden;
-  text-align: right;
-}
-.markdown-preview-plus-view[data-use-github-style] span.align-right span img {
-  margin: 0;
-  text-align: right;
-}
-.markdown-preview-plus-view[data-use-github-style] span.float-left {
-  display: block;
-  float: left;
-  margin-right: 13px;
-  overflow: hidden;
-}
-.markdown-preview-plus-view[data-use-github-style] span.float-left span {
-  margin: 13px 0 0;
-}
-.markdown-preview-plus-view[data-use-github-style] span.float-right {
-  display: block;
-  float: right;
-  margin-left: 13px;
-  overflow: hidden;
-}
-.markdown-preview-plus-view[data-use-github-style] span.float-right > span {
-  display: block;
-  margin: 13px auto 0;
-  overflow: hidden;
-  text-align: right;
-}
-.markdown-preview-plus-view[data-use-github-style] code,
-.markdown-preview-plus-view[data-use-github-style] tt {
-  padding: 0;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  margin: 0;
-  font-size: 85%;
-  background-color: rgba(0, 0, 0, 0.04);
-  border-radius: 3px;
-}
-.markdown-preview-plus-view[data-use-github-style] code:before,
-.markdown-preview-plus-view[data-use-github-style] tt:before,
-.markdown-preview-plus-view[data-use-github-style] code:after,
-.markdown-preview-plus-view[data-use-github-style] tt:after {
-  letter-spacing: -0.2em;
-  content: "\00a0";
-}
-.markdown-preview-plus-view[data-use-github-style] code br,
-.markdown-preview-plus-view[data-use-github-style] tt br {
-  display: none;
-}
-.markdown-preview-plus-view[data-use-github-style] del code {
-  text-decoration: inherit;
-}
-.markdown-preview-plus-view[data-use-github-style] pre > code {
-  padding: 0;
-  margin: 0;
-  font-size: 100%;
-  word-break: normal;
-  white-space: pre;
-  background: transparent;
-  border: 0;
-}
-.markdown-preview-plus-view[data-use-github-style] .highlight {
-  margin-bottom: 16px;
-}
-.markdown-preview-plus-view[data-use-github-style] .highlight pre,
-.markdown-preview-plus-view[data-use-github-style] pre {
-  padding: 16px;
-  overflow: auto;
-  font-size: 85%;
-  line-height: 1.45;
-  background-color: #f7f7f7;
-  border-radius: 3px;
-}
-.markdown-preview-plus-view[data-use-github-style] .highlight pre {
-  margin-bottom: 0;
-  word-break: normal;
-}
-.markdown-preview-plus-view[data-use-github-style] pre {
-  word-wrap: normal;
-}
-.markdown-preview-plus-view[data-use-github-style] pre code,
-.markdown-preview-plus-view[data-use-github-style] pre tt {
-  display: inline;
-  max-width: initial;
-  padding: 0;
-  margin: 0;
-  overflow: initial;
-  line-height: inherit;
-  word-wrap: normal;
-  background-color: transparent;
-  border: 0;
-}
-.markdown-preview-plus-view[data-use-github-style] pre code:before,
-.markdown-preview-plus-view[data-use-github-style] pre tt:before,
-.markdown-preview-plus-view[data-use-github-style] pre code:after,
-.markdown-preview-plus-view[data-use-github-style] pre tt:after {
-  content: normal;
-}
-.markdown-preview-plus-view[data-use-github-style] kbd {
-  display: inline-block;
-  padding: 3px 5px;
-  font-size: 11px;
-  line-height: 10px;
-  color: #555;
-  vertical-align: middle;
-  background-color: #fcfcfc;
-  border: solid 1px #ccc;
-  border-bottom-color: #bbb;
-  border-radius: 3px;
-  box-shadow: inset 0 -1px 0 #bbb;
-}
-.markdown-preview-plus-view[data-use-github-style] span.critic.comment > span {
-  background-color: #fff;
-}
-.markdown-preview-plus-view[data-use-github-style] a {
-  color: #337ab7;
-}
-.markdown-preview-plus-view[data-use-github-style] pre,
-.markdown-preview-plus-view[data-use-github-style] code {
-  color: inherit;
-}
-.markdown-preview-plus-view[data-use-github-style] pre,
-.markdown-preview-plus-view[data-use-github-style] pre.editor-colors {
-  padding: 0.8em 1em;
-  margin-bottom: 1em;
-  font-size: 0.85em;
-  border-radius: 4px;
-  overflow: auto;
-}
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-.bracket-matcher .region {
-  border-bottom: 1px dotted lime;
-  position: absolute;
-}
-.line-number.bracket-matcher.bracket-matcher {
-  color: #373b41;
-  background-color: #e0e0e0;
-}
+  <!-- Custom fonts for this template -->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
-.spell-check-misspelling .region {
-  border-bottom: 2px dotted rgba(255, 51, 51, 0.75);
-}
-.spell-check-corrections {
-  width: 25em !important;
-}
+  <!-- Custom styles for this template -->
+  <link href="css/clean-blog.min.css" rel="stylesheet">
 
-pre.editor-colors {
-  background-color: #ffffff;
-  color: #1d1f21;
-}
-pre.editor-colors .wrap-guide {
-  background-color: #c5c8c6;
-}
-pre.editor-colors .indent-guide {
-  color: #c5c8c6;
-}
-pre.editor-colors .invisible-character {
-  color: #c5c8c6;
-}
-pre.editor-colors .gutter {
-  background-color: #ffffff;
-  color: #b4b7b4;
-}
-pre.editor-colors .gutter .line-number {
-  padding: 0 0.25em 0 0.5em;
-  -webkit-font-smoothing: antialiased;
-}
-pre.editor-colors .gutter .line-number.cursor-line {
-  background-color: #e0e0e0;
-  color: #373b41;
-}
-pre.editor-colors .gutter .line-number.cursor-line-no-selection {
-  color: #373b41;
-}
-pre.editor-colors .gutter .line-number.folded,
-pre.editor-colors .gutter .line-number:after,
-pre.editor-colors .fold-marker:after {
-  color: #b4b7b4;
-}
-pre.editor-colors .invisible {
-  color: #1d1f21;
-}
-pre.editor-colors .cursor {
-  color: #1d1f21;
-}
-pre.editor-colors .selection .region {
-  background-color: #e0e0e0;
-}
-pre.editor-colors .bracket-matcher .region {
-  border-color: #b4b7b4;
-}
-.syntax--comment {
-  color: #969896;
-}
-.syntax--comment .syntax--markup.syntax--link {
-  color: #969896;
-}
-.syntax--entity.syntax--name.syntax--type {
-  color: #f0c674;
-}
-.syntax--entity.syntax--other.syntax--inherited-class {
-  color: #b5bd68;
-}
-.syntax--keyword {
-  color: #b294bb;
-}
-.syntax--keyword.syntax--control {
-  color: #b294bb;
-}
-.syntax--keyword.syntax--operator {
-  color: #1d1f21;
-}
-.syntax--keyword.syntax--other.syntax--special-method {
-  color: #81a2be;
-}
-.syntax--keyword.syntax--other.syntax--unit {
-  color: #de935f;
-}
-.syntax--storage {
-  color: #b294bb;
-}
-.syntax--constant {
-  color: #de935f;
-}
-.syntax--constant.syntax--character.syntax--escape {
-  color: #8abeb7;
-}
-.syntax--constant.syntax--numeric {
-  color: #de935f;
-}
-.syntax--constant.syntax--other.syntax--color {
-  color: #8abeb7;
-}
-.syntax--constant.syntax--other.syntax--symbol {
-  color: #8abeb7;
-}
-.syntax--variable {
-  color: #cc6666;
-}
-.syntax--variable.syntax--interpolation {
-  color: #a3685a;
-}
-.syntax--variable.syntax--parameter.syntax--function {
-  color: #1d1f21;
-}
-.syntax--invalid.syntax--illegal {
-  background-color: #cc6666;
-  color: #ffffff;
-}
-.syntax--string {
-  color: #b5bd68;
-}
-.syntax--string.syntax--regexp {
-  color: #8abeb7;
-}
-.syntax--string.syntax--regexp .syntax--source.syntax--ruby.syntax--embedded {
-  color: #f0c674;
-}
-.syntax--string.syntax--other.syntax--link {
-  color: #cc6666;
-}
-.syntax--punctuation.syntax--definition.syntax--parameters,
-.syntax--punctuation.syntax--definition.syntax--array {
-  color: #1d1f21;
-}
-.syntax--punctuation.syntax--definition.syntax--heading,
-.syntax--punctuation.syntax--definition.syntax--identity {
-  color: #81a2be;
-}
-.syntax--punctuation.syntax--definition.syntax--bold {
-  color: #f0c674;
-  font-weight: bold;
-}
-.syntax--punctuation.syntax--definition.syntax--italic {
-  color: #b294bb;
-  font-style: italic;
-}
-.syntax--punctuation.syntax--section.syntax--embedded {
-  color: #a3685a;
-}
-.syntax--punctuation.syntax--section.syntax--method,
-.syntax--punctuation.syntax--section.syntax--class,
-.syntax--punctuation.syntax--section.syntax--inner-class {
-  color: #1d1f21;
-}
-.syntax--support.syntax--class {
-  color: #f0c674;
-}
-.syntax--support.syntax--function {
-  color: #8abeb7;
-}
-.syntax--support.syntax--function.syntax--any-method {
-  color: #81a2be;
-}
-.syntax--entity.syntax--name.syntax--function {
-  color: #81a2be;
-}
-.syntax--entity.syntax--name.syntax--class,
-.syntax--entity.syntax--name.syntax--type.syntax--class {
-  color: #f0c674;
-}
-.syntax--entity.syntax--name.syntax--section {
-  color: #81a2be;
-}
-.syntax--entity.syntax--name.syntax--tag {
-  color: #cc6666;
-}
-.syntax--entity.syntax--other.syntax--attribute-name {
-  color: #de935f;
-}
-.syntax--entity.syntax--other.syntax--attribute-name.syntax--id {
-  color: #81a2be;
-}
-.syntax--meta.syntax--class {
-  color: #f0c674;
-}
-.syntax--meta.syntax--class.syntax--body {
-  color: #1d1f21;
-}
-.syntax--meta.syntax--link {
-  color: #de935f;
-}
-.syntax--meta.syntax--method-call,
-.syntax--meta.syntax--method {
-  color: #1d1f21;
-}
-.syntax--meta.syntax--require {
-  color: #81a2be;
-}
-.syntax--meta.syntax--selector {
-  color: #b294bb;
-}
-.syntax--meta.syntax--separator {
-  background-color: #373b41;
-  color: #1d1f21;
-}
-.syntax--meta.syntax--tag {
-  color: #1d1f21;
-}
-.syntax--none {
-  color: #1d1f21;
-}
-.syntax--markup.syntax--bold {
-  color: #de935f;
-  font-weight: bold;
-}
-.syntax--markup.syntax--changed {
-  color: #b294bb;
-}
-.syntax--markup.syntax--deleted {
-  color: #cc6666;
-}
-.syntax--markup.syntax--italic {
-  color: #b294bb;
-  font-style: italic;
-}
-.syntax--markup.syntax--heading {
-  color: #cc6666;
-}
-.syntax--markup.syntax--heading .syntax--punctuation.syntax--definition.syntax--heading {
-  color: #81a2be;
-}
-.syntax--markup.syntax--link {
-  color: #81a2be;
-}
-.syntax--markup.syntax--inserted {
-  color: #b5bd68;
-}
-.syntax--markup.syntax--quote {
-  color: #de935f;
-}
-.syntax--markup.syntax--raw {
-  color: #b5bd68;
-}
-.syntax--source.syntax--gfm .syntax--markup {
-  -webkit-font-smoothing: auto;
-}
-.syntax--source.syntax--gfm .syntax--link .syntax--entity {
-  color: #8abeb7;
-}
-.syntax--source.syntax--cs .syntax--keyword.syntax--operator {
-  color: #b294bb;
-}
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--string.syntax--quoted.syntax--json {
-  color: #cc6666;
-}
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--string.syntax--quoted.syntax--json > .syntax--punctuation.syntax--string {
-  color: #cc6666;
-}
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json,
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--array.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json,
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json > .syntax--punctuation,
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--array.syntax--json > .syntax--value.syntax--json > .syntax--string.syntax--quoted.syntax--json > .syntax--punctuation {
-  color: #b5bd68;
-}
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--dictionary.syntax--json > .syntax--constant.syntax--language.syntax--json,
-.syntax--source.syntax--json .syntax--meta.syntax--structure.syntax--array.syntax--json > .syntax--constant.syntax--language.syntax--json {
-  color: #8abeb7;
-}
-</style>
+</head>
 
-  </head>
-  <body class="markdown-preview-plus-view">
-    <h1>PytorchによるRankNet</h1>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('img/post-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>PytorchによるRankNet</h1>
+            <span class="meta">Posted on July 26, 2019</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+
 <p>From RankNet to LambdaRank to LambdaMART: An Overview[^1]を基にRankNetの説明とPytorchによる実装をしていきたいと思います.</p>
 <p><strong>RankNet</strong>は, 一言で言うとPairwiseの手法を用いたランク学習モデルです.</p>
 <h2>ランク学習とは?</h2>
@@ -1012,6 +193,47 @@ RankNetでは学習において損失関数として交差エントロピー誤�
 <p><a href="https://github.com/ryo59/Learning_to_rank">リポジトリへのリンク</a></p>
 <hr>
 <p>[^1]: <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.180.634&amp;rep=rep1&amp;type=pdf">From RankNet to LambdaRank to LambdaMART: An Overview</a></p>
+</div>
+</div>
+</div>
+</article>
 
-  </body>
+<hr>
+
+<!-- begin wwww.htmlcommentbox.com -->
+<div id="HCB_comment_box"><a href="http://www.htmlcommentbox.com">Comment Box</a> is loading comments...</div>
+<link rel="stylesheet" type="text/css" href="https://www.htmlcommentbox.com/static/skins/bootstrap/twitter-bootstrap.css?v=0" />
+<script type="text/javascript" id="hcb"> /*<!--*/ if(!window.hcb_user){hcb_user={};} (function(){var s=document.createElement("script"), l=hcb_user.PAGE || (""+window.location).replace(/'/g,"%27"), h="https://www.htmlcommentbox.com";s.setAttribute("type","text/javascript");s.setAttribute("src", h+"/jread?page="+encodeURIComponent(l).replace("+","%2B")+"&mod=%241%24wq1rdBcg%24WwTegA0YvzU7KdiCG.sdV1"+"&opts=16862&num=10&ts=1563694714828");if (typeof s!="undefined") document.getElementsByTagName("head")[0].appendChild(s);})(); /*-->*/ </script>
+<!-- end www.htmlcommentbox.com -->
+
+<!-- Footer -->
+<footer>
+<div class="container">
+<div class="row">
+<div class="col-lg-8 col-md-10 mx-auto">
+  <ul class="list-inline text-center">
+    <li class="list-inline-item">
+      <a href="https://github.com/ryo59">
+        <span class="fa-stack fa-lg">
+          <i class="fas fa-circle fa-stack-2x"></i>
+          <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+        </span>
+      </a>
+    </li>
+  </ul>
+  <p class="copyright text-muted">Copyright &copy; Ryo Inagaki 2019</p>
+</div>
+</div>
+</div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom scripts for this template -->
+<script src="js/clean-blog.min.js"></script>
+
+</body>
+
 </html>
